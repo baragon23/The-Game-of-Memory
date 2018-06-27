@@ -2,6 +2,21 @@
  * Create a list that holds all of your cards
  */
 
+var deck = document.getElementsByTagName("ul")[1];
+var cardList = [];
+var cardOutline;
+
+for (var i = 0; i < 16; i++) {
+	cardOutline = document.createElement('li');
+	cardOutline.className = 'card';
+	cardList.push(cardOutline);
+}
+
+cardList.forEach(function(card) {
+	deck.appendChild(card);
+});
+
+
 
 /*
  * Display the cards on the page
