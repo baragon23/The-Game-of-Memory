@@ -3,11 +3,17 @@
  */
 
 var deck = document.getElementsByTagName("ul")[1];
-var cardList = document.querySelectorAll('.card');
 var openCards = [];
 var moves = 0;
+var matchedCards = 0;
 var score = document.querySelector('.moves');
 
+// setup restart button
+document.querySelector('.restart').addEventListener('click', function() {
+	resetGame();
+});
+
+setupGame();
 
 /*
  * Display the cards on the page
@@ -16,63 +22,90 @@ var score = document.querySelector('.moves');
  *   - add each card's HTML to the page
  */
 
-cardList.forEach(function(card) {
-	card.addEventListener('click', function(e) {
+function setupGame() {
 
-		// if the card has not already been displayed or matched
-		if (!card.classList.contains('open') && !card.classList.contains('show') && !card.classList.contains('match')) {
+	var cardList = document.querySelectorAll('.card');
 
-			openCards.push(e.target);
+	// reset deck of cards
+	cardList.forEach(function(card) {
+		card.classList.remove('open');
+		card.classList.remove('show');
+		card.classList.remove('match');
+	});
 
-			// display card clicked on
-			card.classList.add('open');
-			card.classList.add('show');
+	cardList.forEach(function(card) {
+		card.addEventListener('click', function(e) {
 
-			console.log(openCards);
+			// if the card has not already been displayed or matched
+			if (!card.classList.contains('open') && !card.classList.contains('show') && !card.classList.contains('match')) {
 
-			// if 2 cards have been clicked
-			if (openCards.length === 2) {
-				var firstCard = openCards[0].children[0].className;
-				var secondCard = openCards[1].children[0].className;
+				openCards.push(e.target);
 
-				// the cards match
-				if (firstCard === secondCard) {
-					openCards.forEach(function(card) {
-						card.classList.add('match');
-						card.classList.remove('open');
-						card.classList.remove('show');
-					});
-					openCards.length = 0;
-				}
-				// the cards don't match
-				else {
-					setTimeout(function() {
+				// display card clicked on
+				card.classList.add('open');
+				card.classList.add('show');
+
+				console.log(openCards);
+
+				// if 2 cards have been clicked
+				if (openCards.length === 2) {
+					var firstCard = openCards[0].children[0].className;
+					var secondCard = openCards[1].children[0].className;
+
+					// the cards match
+					if (firstCard === secondCard) {
 						openCards.forEach(function(card) {
+							card.classList.add('match');
 							card.classList.remove('open');
 							card.classList.remove('show');
 						});
+						matchedCards += 2;
 						openCards.length = 0;
-					}, 1000);
+
+						if (matchedCards === 16) {
+							console.log('game is won');
+						}
+					}
+					// the cards don't match
+					else {
+						setTimeout(function() {
+							openCards.forEach(function(card) {
+								card.classList.remove('open');
+								card.classList.remove('show');
+							});
+							openCards.length = 0;
+						}, 1000);
+					}
+
+					// increment moves counter
+					moves += 1;
+					score.innerText = moves;
 				}
-
-				// increment moves counter
-				moves += 1;
-				score.innerText = moves;
+				// only 1 card has been clicked
+				else {
+					card.classList.add('open');
+					card.classList.add('show');
+				}
 			}
-			// only 1 card has been clicked
-			else {
-				card.classList.add('open');
-				card.classList.add('show');
-			}
-		}
+		});
 	});
-});
 
-cardList = shuffle(cardList);
+	// convert from nodelist to array so we can use shuffle function
+	cardList = [...cardList];
+	cardList = shuffle(cardList);
 
-cardList.forEach(function(card) {
-	deck.appendChild(card);
-});
+	// add cards to deck
+	cardList.forEach(function(card) {
+		deck.appendChild(card);
+	});
+}
+
+function resetGame() {
+	moves = 0;
+	score.innerText = moves;
+	openCards.length = 0;
+	setupGame();
+}
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -86,6 +119,7 @@ function shuffle(array) {
         array[randomIndex] = temporaryValue;
     }
 
+    console.log(array);
     return array;
 }
 
