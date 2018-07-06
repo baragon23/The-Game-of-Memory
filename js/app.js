@@ -5,6 +5,8 @@
 var deck = document.getElementsByTagName("ul")[1];
 var cardList = document.querySelectorAll('.card');
 var openCards = [];
+var moves = 0;
+var score = document.querySelector('.moves');
 
 
 /*
@@ -17,43 +19,52 @@ var openCards = [];
 cardList.forEach(function(card) {
 	card.addEventListener('click', function(e) {
 
-		openCards.push(e.target);
-		card.classList.add('open');
-		card.classList.add('show');
+		// if the card has not already been displayed or matched
+		if (!card.classList.contains('open') && !card.classList.contains('show') && !card.classList.contains('match')) {
 
-		var firstCard = openCards[0].children[0].className;
+			openCards.push(e.target);
 
-		console.log(openCards);
+			// display card clicked on
+			card.classList.add('open');
+			card.classList.add('show');
 
-		if (openCards.length === 2) {
-			var firstCard = openCards[0].children[0].className;
-			var secondCard = openCards[1].children[0].className;
+			console.log(openCards);
 
-			// the cards match
-			if (firstCard === secondCard) {
-				openCards.forEach(function(card) {
-					card.classList.add('match');
-					card.classList.remove('open');
-					card.classList.remove('show');
-				});
-				openCards.length = 0;
-			}
-			// the cards don't match
-			else {
-				setTimeout(function() {
+			// if 2 cards have been clicked
+			if (openCards.length === 2) {
+				var firstCard = openCards[0].children[0].className;
+				var secondCard = openCards[1].children[0].className;
+
+				// the cards match
+				if (firstCard === secondCard) {
 					openCards.forEach(function(card) {
+						card.classList.add('match');
 						card.classList.remove('open');
 						card.classList.remove('show');
 					});
 					openCards.length = 0;
-				}, 1000);
+				}
+				// the cards don't match
+				else {
+					setTimeout(function() {
+						openCards.forEach(function(card) {
+							card.classList.remove('open');
+							card.classList.remove('show');
+						});
+						openCards.length = 0;
+					}, 1000);
+				}
+
+				// increment moves counter
+				moves += 1;
+				score.innerText = moves;
+			}
+			// only 1 card has been clicked
+			else {
+				card.classList.add('open');
+				card.classList.add('show');
 			}
 		}
-		else {
-			card.classList.add('open');
-			card.classList.add('show');
-		}
-
 	});
 });
 
