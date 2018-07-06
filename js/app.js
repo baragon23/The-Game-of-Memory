@@ -2,24 +2,9 @@
  * Create a list that holds all of your cards
  */
 
-var icons = ['fa-diamond', 'fa-paper-plane-o', 'fa-anchor', 'fa-bolt', 'fa-cube', 'fa-leaf', 'fa-bicycle', 'fa-bomb', 'fa-diamond', 'fa-paper-plane-o', 'fa-anchor', 'fa-bolt', 'fa-cube', 'fa-leaf', 'fa-bicycle', 'fa-bomb'];
 var deck = document.getElementsByTagName("ul")[1];
-var cardList = [];
-var cardOutline;
-var cardIcon;
-
-for (var i = 0; i < 16; i++) {
-	cardOutline = document.createElement('li');
-	cardOutline.className = 'card';
-
-	cardIcon = document.createElement('i');
-	cardIcon.classList.add('fa');
-	cardIcon.classList.add(icons[i]);
-
-	cardOutline.appendChild(cardIcon);
-
-	cardList.push(cardOutline);
-}
+var cardList = document.querySelectorAll('.card');
+var openCards = [];
 
 
 /*
@@ -30,9 +15,45 @@ for (var i = 0; i < 16; i++) {
  */
 
 cardList.forEach(function(card) {
-	card.addEventListener('click', function() {
+	card.addEventListener('click', function(e) {
+
+		openCards.push(e.target);
 		card.classList.add('open');
 		card.classList.add('show');
+
+		var firstCard = openCards[0].children[0].className;
+
+		console.log(openCards);
+
+		if (openCards.length === 2) {
+			var firstCard = openCards[0].children[0].className;
+			var secondCard = openCards[1].children[0].className;
+
+			// the cards match
+			if (firstCard === secondCard) {
+				openCards.forEach(function(card) {
+					card.classList.add('match');
+					card.classList.remove('open');
+					card.classList.remove('show');
+				});
+				openCards.length = 0;
+			}
+			// the cards don't match
+			else {
+				setTimeout(function() {
+					openCards.forEach(function(card) {
+						card.classList.remove('open');
+						card.classList.remove('show');
+					});
+					openCards.length = 0;
+				}, 1000);
+			}
+		}
+		else {
+			card.classList.add('open');
+			card.classList.add('show');
+		}
+
 	});
 });
 
