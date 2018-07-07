@@ -7,6 +7,7 @@ var openCards = [];
 var moves = 0;
 var matchedCards = 0;
 var score = document.querySelector('.moves');
+var startTime, endTime;
 
 // setup restart button
 document.querySelector('.restart').addEventListener('click', function() {
@@ -25,6 +26,12 @@ setupGame();
 function setupGame() {
 
 	var cardList = document.querySelectorAll('.card');
+
+	startTime = performance.now();
+
+	document.getElementById('playAgain').addEventListener('click', function() {
+		hideModal();
+	});
 
 	// reset deck of cards
 	cardList.forEach(function(card) {
@@ -59,11 +66,15 @@ function setupGame() {
 							card.classList.remove('open');
 							card.classList.remove('show');
 						});
+
 						matchedCards += 2;
 						openCards.length = 0;
 
+						// game is won
 						if (matchedCards === 16) {
-							console.log('game is won');
+							endTime = performance.now();
+							showModal();
+							wonGame();
 						}
 					}
 					// the cards don't match
@@ -78,8 +89,8 @@ function setupGame() {
 					}
 
 					// increment moves counter
-					moves += 1;
-					score.innerText = moves;
+					movesHandler();
+
 				}
 				// only 1 card has been clicked
 				else {
@@ -100,11 +111,45 @@ function setupGame() {
 	});
 }
 
+function wonGame() {
+	var finalTime = (endTime - startTime) / 1000;
+	document.getElementById('timeSummary').innerText = finalTime;
+}
+
+function showModal() {
+	var modal = document.getElementById('modal');
+	modal.style.display = 'flex';
+}
+
+function hideModal() {
+	var modal = document.getElementById('modal');
+	modal.style.display = 'none';
+}
+
 function resetGame() {
 	moves = 0;
 	score.innerText = moves;
 	openCards.length = 0;
 	setupGame();
+	showModal();
+}
+
+function movesHandler() {
+	moves += 1;
+
+	if (moves === 10) {
+		removeStar();
+	}
+	if (moves === 14) {
+		removeStar();
+	}
+
+	score.innerText = moves;
+}
+
+function removeStar() {
+	var stars = document.getElementsByClassName('stars');
+	stars[0].removeChild(stars[0].children[0]);
 }
 
 // Shuffle function from http://stackoverflow.com/a/2450976
