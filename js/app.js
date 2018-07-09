@@ -112,8 +112,11 @@ function setupGame() {
 }
 
 function wonGame() {
-	var finalTime = (endTime - startTime) / 1000;
-	document.getElementById('timeSummary').innerText = finalTime;
+	endTime = performance.now();
+	var finalTime = Math.floor((endTime - startTime) / 1000);
+	document.getElementById('timeSummary').innerText = finalTime + ' seconds';
+
+	document.getElementById('movesSummary').innerText = moves;
 }
 
 function showModal() {
@@ -130,6 +133,7 @@ function resetGame() {
 	moves = 0;
 	score.innerText = moves;
 	openCards.length = 0;
+	wonGame();
 	setupGame();
 	showModal();
 }
@@ -137,17 +141,17 @@ function resetGame() {
 function movesHandler() {
 	moves += 1;
 
-	if (moves === 10) {
+	if (moves === 12) {
 		removeStar();
 	}
-	if (moves === 14) {
+	else if (moves === 15) {
 		removeStar();
 	}
 
 	score.innerText = moves;
 }
 
-function removeStar() {
+function removeStar(count) {
 	var stars = document.getElementsByClassName('stars');
 	stars[0].removeChild(stars[0].children[0]);
 }

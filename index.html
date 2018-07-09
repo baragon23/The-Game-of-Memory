@@ -82,8 +82,15 @@
 
 		<section id="modal">
 			<div class="modalContainer">
-				<h3>Congratulations! You won!</h3>
-				<p>With <span class="movesSummary"></span> moves and <span class="starsSummary"></span></p>
+				<div>Congratulations! You won!</div>
+				<p>Moves: <span id="movesSummary"></span></p>
+				<div>Star rating:
+					<ul class="stars">
+						<li><i class="fa fa-star"></i></li>
+						<li><i class="fa fa-star"></i></li>
+						<li><i class="fa fa-star"></i></li>
+					</ul>
+				</div>
 				<p>Time Spent: <span id="timeSummary"></span></p>
 				<button id="playAgain">Play Again</button>
 			</div>
