@@ -9,6 +9,11 @@ var matchedCards = 0;
 var score = document.querySelector('.moves');
 var startTime, endTime;
 
+var minutesLabel = document.getElementById("minutes");
+var secondsLabel = document.getElementById("seconds");
+var totalSeconds = 0;
+var timerInterval = setInterval(setTime, 1000);
+
 // setup restart button
 document.querySelector('.restart').addEventListener('click', function() {
 	resetGame();
@@ -30,7 +35,7 @@ function setupGame() {
 	startTime = performance.now();
 
 	document.getElementById('playAgain').addEventListener('click', function() {
-		hideModal();
+		playAgain();
 	});
 
 	// reset deck of cards
@@ -70,10 +75,10 @@ function setupGame() {
 						matchedCards += 2;
 						openCards.length = 0;
 
+						// todo: put this if in a isGameWon() function
 						// game is won
 						if (matchedCards === 16) {
 							endTime = performance.now();
-							showModal();
 							wonGame();
 						}
 					}
@@ -116,26 +121,31 @@ function wonGame() {
 	var finalTime = Math.floor((endTime - startTime) / 1000);
 	document.getElementById('timeSummary').innerText = finalTime + ' seconds';
 
+	// display total moves made
 	document.getElementById('movesSummary').innerText = moves;
+
+	// show modal
+	document.getElementById('modal').style.display = 'flex';
 }
 
-function showModal() {
-	var modal = document.getElementById('modal');
-	modal.style.display = 'flex';
-}
+function playAgain() {
+	totalSeconds = 0; // reset timer
 
-function hideModal() {
-	var modal = document.getElementById('modal');
-	modal.style.display = 'none';
+	// todo: will need to call resetGame() here
+
+	// hide modal
+	document.getElementById('modal').style.display = 'none';
 }
 
 function resetGame() {
+	// todo: reset stars back to 3
+
 	moves = 0;
 	score.innerText = moves;
 	openCards.length = 0;
-	wonGame();
+	wonGame(); // todo: remove after testing modal
 	setupGame();
-	showModal();
+	totalSeconds = 0; // reset timer
 }
 
 function movesHandler() {
@@ -144,7 +154,7 @@ function movesHandler() {
 	if (moves === 12) {
 		removeStar();
 	}
-	else if (moves === 15) {
+	else if (moves === 16) {
 		removeStar();
 	}
 
@@ -172,6 +182,20 @@ function shuffle(array) {
     return array;
 }
 
+function setTime() {
+	++totalSeconds;
+	secondsLabel.innerHTML = pad(totalSeconds % 60);
+	minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60));
+}
+
+function pad(val) {
+	var valString = val + "";
+	if (valString.length < 2) {
+		return "0" + valString;
+	} else {
+		return valString;
+	}
+}
 
 /*
  * set up the event listener for a card. If a card is clicked:
