@@ -210,6 +210,9 @@ function shuffle(array) {
     return array;
 }
 
+
+// setTime timer code from StackOverflow:
+// https://stackoverflow.com/questions/42874790/how-do-i-make-a-html-count-up-timer-with-the-daysminutesseconds-without-resett
 function setTime() {
 	++totalSeconds;
 	secondsLabel.innerHTML = pad(totalSeconds % 60);
