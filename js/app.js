@@ -21,15 +21,10 @@ document.querySelector('.restart').addEventListener('click', function() {
 
 setupGame();
 
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
-
+// setup the card memory game by assigning each card to have a click event
 function setupGame() {
 
+	// create list to hold all cards
 	var cardList = document.querySelectorAll('.card');
 
 	startTime = performance.now();
@@ -56,8 +51,6 @@ function setupGame() {
 				// display card clicked on
 				card.classList.add('open');
 				card.classList.add('show');
-
-				console.log(openCards);
 
 				// if 2 cards have been clicked
 				if (openCards.length === 2) {
@@ -124,26 +117,61 @@ function wonGame() {
 	// display total moves made
 	document.getElementById('movesSummary').innerText = moves;
 
+	// create stars
+	starsWon();
+
 	// show modal
 	document.getElementById('modal').style.display = 'flex';
+}
+
+// create stars to display in the Won Game modal based on number of moves
+function starsWon() {
+	var ul = document.getElementById('finalStars');
+	var li = document.createElement('li');
+	li.classList.add('fa');
+	li.classList.add('fa-star');
+
+	if (moves < 12) {
+		ul.appendChild(li);
+		ul.appendChild(li);
+		ul.appendChild(li);
+	}
+	else if (moves >= 12 && moves < 16) {
+		ul.appendChild(li);
+		ul.appendChild(li);
+	}
+	else {
+		ul.appendChild(li);
+	}
+}
+
+// reset the stars to 3 when the game resets
+function resetStars() {
+	var stars = document.getElementsByClassName('stars');
+	stars[0].innerHTML =
+				'<li><i class="fa fa-star"></i></li>' +
+				'<li><i class="fa fa-star"></i></li>' +
+				'<li><i class="fa fa-star"></i></li>';
 }
 
 function playAgain() {
 	totalSeconds = 0; // reset timer
 
-	// todo: will need to call resetGame() here
-
 	// hide modal
 	document.getElementById('modal').style.display = 'none';
+
+	resetGame();
 }
 
 function resetGame() {
-	// todo: reset stars back to 3
+	// reset stars back to 3
+	resetStars();
 
+	matchedCards = 0;
 	moves = 0;
 	score.innerText = moves;
 	openCards.length = 0;
-	wonGame(); // todo: remove after testing modal
+	//wonGame(); // todo: remove after testing modal
 	setupGame();
 	totalSeconds = 0; // reset timer
 }
